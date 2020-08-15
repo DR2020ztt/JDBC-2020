@@ -57,12 +57,19 @@ public class Test {
 			System.out.println("添加失败");
 		}
 		*/
-		
+		/*
 		int result=dao.deleteEmpById(8001);
 		if(result>0){
 			System.out.println("添加成功");
 		}else{
 			System.out.println("添加失败");
+		}
+		*/
+		int result=dao.zhuanzhang(8, 9);
+		if(result>0){
+			System.out.println("转账成功");
+		}else{
+			System.out.println("转账不成功");
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.neusoft.dao.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,6 +121,40 @@ public class EmpDaoImpl implements EmpDao {
 			pst.setInt(1, empno);
 			result = pst.executeUpdate();
 		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.closeAll(rs, pst, con);
+		}
+		return result;
+	}
+	
+	@Override
+	public int zhuanzhang(int empno1,int empno2)
+	{
+		int result = 1;
+		String sql1 = "update emp set sal=sal-500 where empno=?";
+		String sql2 = "update emp set sal=sal+500 wher empno=?";
+		try {
+			con = DBUtil.getConnection();
+			//在mysql，默认自动提交，那么，如果需要自己管理事务，就不能自动提交
+			//1、开启一个事务。（设置不自动提交）
+			con.setAutoCommit(false);
+			
+			pst=con.prepareStatement(sql1);
+			pst.setInt(1, empno1);
+			pst.executeUpdate();
+			
+			pst=con.prepareStatement(sql2);
+			pst.setInt(1, empno2);
+			pst.executeUpdate();
+		} catch (Exception e) {
+			result=0;
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 		} finally {
 			DBUtil.closeAll(rs, pst, con);
